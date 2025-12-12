@@ -28,4 +28,17 @@ variable "service-environment1" {
   type        = string
 }
 
+variable "gke_num_nodes" {
+  description = "Number of GKE nodes"
+  type        = number
+  default     = 1
+}
+
+variable "machine_type" {
+  description = "GKE node machine type"
+  type        = string
+  default     = "e2-medium"
+}
+
+
 

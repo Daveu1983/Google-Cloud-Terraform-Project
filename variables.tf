@@ -63,3 +63,21 @@ variable "bucket_name" {
   type        = string
   default     = "service-account-1-bucket"
 }
+
+variable "pubsub_topic_name" {
+  description = "The name of the Pub/Sub topic"
+  type        = string
+  default     = "my-topic"
+}
+
+variable "pubsub_subscription_name" {
+  description = "The name of the Pub/Sub subscription"
+  type        = string
+  default     = "my-subscription"
+}
+
+variable "pubsub_service_account_name" {
+  description = "The name of the Pub/Sub service account"
+  type        = string
+  default     = "pubsub-sa"
+}

@@ -50,7 +50,12 @@ resource "google_container_node_pool" "gke_node_pool" {
 
 resource "google_service_account" "getting-random" {
   account_id   = var.gcp_service_account_name
-  display_name = "Workload Identity Service Account"
+  display_name = "Workload Identity Service Account for GCS"
+}
+
+resource "google_service_account" "pubsub_sa" {
+  account_id   = var.pubsub_service_account_name
+  display_name = "Workload Identity Service Account for Pub/Sub"
 }
 
 resource "google_project_iam_member" "getting-random-wi" {
@@ -74,4 +79,26 @@ resource "google_storage_bucket_iam_member" "getting-random_bucket_access" {
   bucket = google_storage_bucket.getting-random_bucket.name
   role   = "roles/storage.objectUser"
   member = google_service_account.getting-random.member
+}
+
+resource "google_pubsub_topic" "default" {
+  name = var.pubsub_topic_name
+}
+
+resource "google_pubsub_subscription" "default" {
+  name  = var.pubsub_subscription_name
+  topic = google_pubsub_topic.default.name
+}
+
+
+resource "google_pubsub_topic_iam_member" "publisher" {
+  topic  = google_pubsub_topic.default.name
+  role   = "roles/pubsub.publisher"
+  member = "serviceAccount:${google_service_account.pubsub_sa.email}"
+}
+
+resource "google_pubsub_subscription_iam_member" "subscriber" {
+  subscription = google_pubsub_subscription.default.name
+  role         = "roles/pubsub.subscriber"
+  member       = "serviceAccount:${google_service_account.pubsub_sa.email}"
 }
